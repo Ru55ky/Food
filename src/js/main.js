@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
 
+    // Tabs
     const tabs = document.querySelectorAll('.tabheader__item'),
            tabsContent = document.querySelectorAll('.tabcontent'),
             tabsParent = document.querySelector('.tabheader__items')
@@ -29,6 +30,55 @@ window.addEventListener('DOMContentLoaded', () => {
     })
     hideTabContent()
     showTabContent(0)
+
     //Timer
-    const deadline = '12-08-2021'
+    const deadline = '2021-08-05'
+    //правильно устанавливаем рамки таймера
+    const getTimeRemaining = (endtime) => {
+        let t = Date.parse(endtime) - Date.parse(new Date()),
+            days = Math.floor((t / (1000 * 60 * 60 * 24))),
+            hours = Math.floor((t / (1000 * 60 * 60) % 24)),
+            minutes = Math.floor((t / 1000 / 60) % 60),
+            seconds = Math.floor((t / 1000) % 60);
+        //результат возвращаем в объекте
+        return {
+            'total': t,
+            days,
+            hours,
+            minutes,
+            seconds
+        };
+    }
+// даем циферблату 0, если число однозначное
+    function getZero(num) {
+        if(num >= 0 && num < 10){
+            return '0' + num
+        } else{
+            return num
+        }
+    }
+
+    //функция, которая исправляет таймер в верстке, запускает и обновляет его
+    function setClock(selector, endtime) {
+        let timer = document.querySelector(selector),
+            days = timer.querySelector('#days'),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000)//обновляем таймер раз/сек
+        updateClock()
+
+        function updateClock() {
+            let t = getTimeRemaining(endtime)
+            days.innerHTML = getZero(t.days)
+            hours.innerHTML = getZero(t.hours)
+            minutes.innerHTML = getZero(t.minutes)
+            seconds.innerHTML = getZero(t.seconds)
+
+            if(t.total <= 0 ) {
+                clearInterval(timeInterval)
+            }
+        }
+    }
+    setClock('.timer', deadline)
 })
