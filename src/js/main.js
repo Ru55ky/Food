@@ -1,9 +1,9 @@
+'use strict'
 window.addEventListener('DOMContentLoaded', () => {
-
     // Tabs
     const tabs = document.querySelectorAll('.tabheader__item'),
-           tabsContent = document.querySelectorAll('.tabcontent'),
-            tabsParent = document.querySelector('.tabheader__items')
+        tabsContent = document.querySelectorAll('.tabcontent'),
+        tabsParent = document.querySelector('.tabheader__items')
 
     //скрываем табы
     const hideTabContent = () => {
@@ -84,19 +84,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //вызов модального окна
     const modalTrigger = document.querySelectorAll('[data-modal]'),
-          modal = document.querySelector('.modal'),
-          modalCloseBtn = modal.querySelector('[data-close]')
+        modal = document.querySelector('.modal'),
+        modalCloseBtn = modal.querySelector('[data-close]')
 
     modalTrigger.forEach(item => {
-        item.addEventListener('click', () => {
-            openModal()
-        })
+        item.addEventListener('click', openModal)
     })
     //функционал открытия/закрытия модального окна
     function openModal () {
         modal.classList.add('show')
         modal.classList.remove('hide')
         document.body.style.overflow = 'hidden'
+        clearInterval(modalTimeId)
     }
     function closeModal () {
         modal.classList.remove('show')
@@ -112,11 +111,20 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     })
     document.addEventListener('keydown', (event) => {
-        if (event.code === "Escape") {
+        if (event.code === "Escape" && modal.classList.contains(('show'))) {
             closeModal()
         }
     })
     modalCloseBtn.addEventListener('click', () => {
         closeModal()
     })
+    const modalTimeId = setTimeout(openModal, 10000)
+
+    function showModalByScroll () {
+        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal()
+            window.removeEventListener('scroll', showModalByScroll)
+        }
+    }
+    window.addEventListener('scroll', showModalByScroll)
 })
