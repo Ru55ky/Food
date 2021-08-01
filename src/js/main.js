@@ -131,12 +131,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Карточки товара
      class MenuCard{
-        constructor(src, alt, title, description, price, parentSelector) {
+        constructor(src, alt, title, description, price, parentSelector, ...classes) {
             this.src = src;
             this.alt = alt;
             this.title = title;
             this.description = description;
-            this.parent = document.querySelector(parentSelector)
+            this.parent = document.querySelector(parentSelector);
+            this.classes = classes;
             this.price = price;
             this.transfer = 3;
             this.changeToUAH();
@@ -146,8 +147,14 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         render() {
             const item = document.createElement('div')
+            if(this.classes.length === 0) {
+                this.classes = 'menu__item'
+                item.classList.add(this.classes)
+            }else {
+                this.classes.forEach(className => item.classList.add(className))
+            }
                 item.innerHTML = `
-                <div class="menu__item">
+           
                     <img src=${this.src} alt=${this.alt}>
                     <h3 class="menu__item-subtitle">${this.title}</h3>
                     <div class="menu__item-descr">${this.description}</div>
@@ -156,7 +163,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         <div class="menu__item-cost">Цена:</div>
                         <div class="menu__item-total"><span>${this.price}</span> $/день</div>
                     </div>
-                </div>
+                
             `;
             this.parent.append(item)
         }
@@ -181,4 +188,5 @@ window.addEventListener('DOMContentLoaded', () => {
         '.menu .container'
     ).render()
 
+    //Forms
 })
